@@ -1,0 +1,67 @@
+#!/bin/bash -eu
+
+function detectOS() {
+    OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+}
+
+function detectArch() {
+    local uname_arch=$(uname -m)
+
+    case $uname_arch in
+        x86_64 | amd64)
+        ARCH=amd64
+        ;;
+        arm64 | aarch64)
+        ARCH=arm64
+        ;;
+        *)
+        echo "Unsupported architecture: $uname_arch"
+        exit 1
+        ;;
+    esac
+}
+
+detectOS
+detectArch
+
+BUILDEVENTS_RELEASE=v0.15.0
+BUILDEVENTS_SHA256_LINUX_AMD64=af51fa6a0934867847ffe2788067ae38a65ac87196e90d334c374591c476cecf
+BUILDEVENTS_SHA256_LINUX_ARM64=1dce7830805b0eb3742e20a53924bd46c5922a4eca0af3df348a854d03242287
+BUILDEVENTS_SHA256_DARWIN_AMD64=8007574a86b79f79b9441e2796837eeaee667d284d74394a13eb6d1ed3efb401
+BUILDEVENTS_SHA256_DARWIN_ARM64=2fd0ad2a4d75a40299757e71338b2ac60bc645b348d25b414bce7c496c5ee78c
+
+PLUGIN_BIN=$( dirname "${BASH_SOURCE[0]}" )
+
+if [ ! -f $PLUGIN_BIN/buildevents ]; then
+  curl -Lf -o $PLUGIN_BIN/buildevents https://github.com/honeycombio/buildevents/releases/download/$BUILDEVENTS_RELEASE/buildevents-$OS-$ARCH
+
+  chmod a+x $PLUGIN_BIN/buildevents
+fi
+
+# sha256 check
+case "$OS-$ARCH" in
+    darwin-amd64)
+        SHA256_CHECK_CMD="shasum -a 256 -c"
+        SHA=$BUILDEVENTS_SHA256_DARWIN_AMD64
+    ;;
+    darwin-arm64)
+        SHA256_CHECK_CMD="shasum -a 256 -c"
+        SHA=$BUILDEVENTS_SHA256_DARWIN_ARM64
+    ;;
+    linux-amd64)
+        SHA256_CHECK_CMD="sha256sum -c"
+        SHA=$BUILDEVENTS_SHA256_LINUX_AMD64
+    ;;
+    linux-arm64)
+        SHA256_CHECK_CMD="sha256sum -c"
+        SHA=$BUILDEVENTS_SHA256_LINUX_ARM64
+    ;;
+    *)
+        echo "Unsupported os/arch: $OS-ARCH"
+        exit 1
+    ;;
+esac
+
+# remove buildevents in case of a sha mismatch.  this will cause commands to run without instrumentation.
+# TODO(toshok) is this what we want?  I think I'd rather the build fail loudly.
+echo "$SHA  $PLUGIN_BIN/buildevents" | $SHA256_CHECK_CMD || rm $PLUGIN_BIN/buildevents

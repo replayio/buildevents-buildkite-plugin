@@ -1,0 +1,12 @@
+name: Buildevents
+description: Send build traces to honeycomb
+author: https://github.com/replayio
+requirements:
+  - curl
+configuration:
+  properties:
+    apiHost:
+      type: string
+    dataset:
+      type: string
+  additionalProperties: false

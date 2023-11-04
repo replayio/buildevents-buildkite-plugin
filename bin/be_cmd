@@ -1,0 +1,12 @@
+
+CMD_NAME=$1
+shift
+# the next arg should be '--' (todo: check this)
+shift
+CMD=$*
+
+if [ -z "$BUILDEVENTS" ]; then
+  exec $CMD
+else
+  exec $BUILDEVENTS cmd $BUILDKITE_BUILD_ID $BUILDKITE_STEP_ID $CMD_NAME -- $CMD
+fi

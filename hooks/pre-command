@@ -1,0 +1,14 @@
+#!/bin/bash -eu
+
+HOOKS_ROOT=$( dirname "${BASH_SOURCE[0]}" )
+PLUGIN_ROOT=$( dirname "$HOOKS_ROOT" )
+PLUGIN_BIN="$PLUGIN_ROOT/bin"
+
+export _BUILDEVENT_STEP_START_TIME=$(date +%s)
+
+# make sure we have a buildevents binary
+$PLUGIN_BIN/fetch_exe
+
+if [ -f $PLUGIN_BIN/buildevents ]; then
+  export BUILDEVENTS=buildevents
+fi
