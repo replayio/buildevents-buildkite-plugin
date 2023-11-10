@@ -43,7 +43,7 @@ BUILDEVENTS_SHA256_DARWIN_ARM64=47a9b198244dc9725b7aa546c9977e2a26275bd112cffb64
 PLUGIN_BIN=$( dirname "${BASH_SOURCE[0]}" )
 
 if [ ! -f $PLUGIN_BIN/buildevents ]; then
-  curl -Lf -o $PLUGIN_BIN/buildevents https://github.com/$BUILDEVENTS_GITHUB_ORG/buildevents/releases/download/$BUILDEVENTS_RELEASE/buildevents-$OS-$ARCH
+  curl -Lf -o $PLUGIN_BIN/buildevents https://github.com/$BUILDEVENTS_GH_ORG/buildevents/releases/download/$BUILDEVENTS_RELEASE/buildevents-$OS-$ARCH
 
   chmod a+x $PLUGIN_BIN/buildevents
 fi
