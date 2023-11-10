@@ -1,7 +1,3 @@
 #!/bin/bash -eu
 
 buildevents step $BUILDKITE_BUILD_ID $BUILDKITE_STEP_ID $_BUILDEVENT_STEP_START_TIME $BUILDKITE_STEP_KEY
-
-if [ $BUILDKITE_COMMAND_EXIT_STATUS -ne 0 ]; then
-  be_status failure
-fi
