@@ -1,0 +1,3 @@
+#!/bin/bash -eu
+
+buildevents bk_watch $BUILDKITE_BUILD_ID
