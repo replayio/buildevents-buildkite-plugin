@@ -1,10 +1,10 @@
-@echo off
+::@echo off
 SETLOCAL
 
 SET "BUILDEVENTS_GH_ORG=replayio"
 SET "BUILDEVENTS_RELEASE=toshok%2Fadd-buildkite-watch-v0.3"
 
-:: For not, assume amd64.  is there a way to detect this?
+:: For now, assume amd64.  is there a way to detect this?
 SET "ARCH=amd64"
 
 SET "PLUGIN_BIN=%~dp0"
